@@ -1,0 +1,20 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        // "tsconfig.json": true,
+        "node_modules": true,
+        ".svelte-kit": true,
+        ".prettierrc": true,
+        ".prettierignore": true,
+        // "eslint.config.js": true,
+        "package-lock.json": true,
+        ".npmrc": true,
+        // "vite.config.ts": true,
+    },
+    "explorerExclude.backup": {}
+}
