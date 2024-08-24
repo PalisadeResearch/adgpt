@@ -2,7 +2,7 @@
 	// @ts-ignore
 	import { useChat } from '@ai-sdk/svelte';
 
-	const { error, input, isLoading, handleSubmit, messages, reload, stop } = useChat({
+	const { error, isLoading, messages, reload, stop, append, setMessages } = useChat({
 		keepLastMessageOnError: true,
 		// @ts-ignore
 		onFinish(message, { usage, finishReason }) {
@@ -21,56 +21,26 @@
 	}
 </script>
 
-<!-- <section>
-	<ul>
-		{#each $messages as message}
-			<li>{message.role}: {message.content}</li>
-		{/each}
-	</ul>
-
-	{#if $isLoading}
-		<div class="mt-4 text-gray-500">
-			<div>Loading...</div>
-			<button
-				type="button"
-				class="px-4 py-2 mt-4 text-blue-500 border border-blue-500 rounded-md"
-				on:click={stop}
-			>
-				Stop
-			</button>
-		</div>
-	{/if}
-
-	{#if $error}
-		<div class="mt-4">
-			<div class="text-red-500">An error occurred.</div>
-			<button
-				type="button"
-				class="px-4 py-2 mt-4 text-blue-500 border border-blue-500 rounded-md"
-				on:click={() => reload()}
-			>
-				Retry
-			</button>
-		</div>
-	{/if}
-
-	<form on:submit={handleSubmit}>
-		<input bind:value={$input} disabled={$isLoading || $error != null} />
-		<button type="submit" style:color="var(--red)">Send</button>
-	</form>
-</section> -->
-
 <main class="flex">
 	<div class="header h-[50px] flex flex-row text-center items-center p-2 gap-2">
 		<div class="title text-lg grow">AdGPT</div>
 	</div>
 	<div class="app flex-1 flex flex-col w-full">
 		<div class="brands h-[100px]">brands</div>
-		<div class="output flex-1 overflow-y-hidden flex flex-col">outputs...</div>
-		<div class="examples h-[50px] flex flex-row text-center items-center">
-			<div class="example grow">I am lonely...</div>
-			<div class="example grow">I am hungry...</div>
-			<div class="example grow">I am broke...</div>
+		<div class="output flex-1 overflow-y-hidden flex flex-col">
+			<ul>
+				{#each $messages as message}
+					{#if message.role !== 'system'}
+						<li class={`${message.role}`}>{message.content}</li>
+					{/if}
+				{/each}
+			</ul>
+		</div>
+		<div class="examples">
+			<div class="example">What to watch today</div>
+			<div class="example">How to make my partner happy?</div>
+			<div class="example">Fun fact about the Roman Empire</div>
+			<div class="example">Tell me about AI safety</div>
 		</div>
 		<div
 			class="input min-h-[50px] flex flex-row rounded-[26px] p-1.5 items-end outline outline-black outline-thin gap-2"
@@ -141,9 +111,24 @@
 				placeholder="Message AdGPT"
 				style="height: {textarea_height}px; padding: 0.5rem 0.75rem;"
 				bind:value={textarea_content}
+				on:keydown={async (e) => {
+					if (e.key === 'Enter' && !e.shiftKey) {
+						e.preventDefault();
+						console.log('messages', $messages);
+						await append({
+							role: 'user',
+							content: textarea_content
+						});
+						console.log('messages', $messages);
+						console.log('messageslen', $messages.length);
+						textarea_content = '';
+						console.log('textarea_content', textarea_content);
+					}
+				}}
 			></textarea>
 			<button
 				class="mb-1 mt-1 me-1 flex h-8 w-8 rounded-full bg-black text-white transition-colors items-center justify-center"
+				type="submit"
 				><svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="32"
@@ -186,7 +171,30 @@
 
 	@screen big {
 		.app {
-			@apply w-[65%];
+			@apply w-[75%];
 		}
+	}
+
+	.examples {
+		@apply grid grid-cols-2 grid-rows-2 gap-2 text-sm p-2;
+	}
+
+	@screen big {
+		.examples {
+			@apply grid-cols-4 grid-rows-1;
+		}
+	}
+
+	.examples > * {
+		@apply outline outline-black outline-thin p-2;
+		text-wrap: balance;
+	}
+
+	.user {
+		@apply text-right ml-[0%];
+	}
+
+	.assistant {
+		@apply text-left mr-[0%];
 	}
 </style>
