@@ -62,68 +62,73 @@
 
 	let brands = [
 		{
-			brand: "nike",
-			path: "static/nike.webp",
-			campaign: "Air Max Day: 30% off all Air Max models; Nike By You: Customize your own sneakers; Sustainable Collection: New eco-friendly sportswear line"
+			brand: 'nike',
+			path: 'static/nike.webp',
+			campaign:
+				'Air Max Day: 30% off all Air Max models; Nike By You: Customize your own sneakers; Sustainable Collection: New eco-friendly sportswear line'
 		},
 		{
-			brand: "tinder",
-			path: "static/tinder.webp",
-			campaign: "Super Like Week: Double your Super Likes; Tinder Plus: First month 50% off; Passport Feature: Connect globally for free this summer"
+			brand: 'tinder',
+			path: 'static/tinder.webp',
+			campaign:
+				'Super Like Week: Double your Super Likes; Tinder Plus: First month 50% off; Passport Feature: Connect globally for free this summer'
 		},
 		{
-			brand: "charmin",
-			path: "static/charmin.svg",
-			campaign: "Ultra Soft Bundle: Buy 2 get 1 free; Forever Roll: 30-day supply with free dispenser; Flushable Wipes: New eco-friendly formula launch"
+			brand: 'charmin',
+			path: 'static/charmin.svg',
+			campaign:
+				'Ultra Soft Bundle: Buy 2 get 1 free; Forever Roll: 30-day supply with free dispenser; Flushable Wipes: New eco-friendly formula launch'
 		},
 		{
-			brand: "demo",
-			path: "static/demo.png",
-			campaign: "Early Access: Sign up for beta testing; Referral Program: Invite friends for premium features; Limited Time Offer: 3 months free trial"
+			brand: 'demo',
+			path: 'static/demo.png',
+			campaign:
+				'Early Access: Sign up for beta testing; Referral Program: Invite friends for premium features; Limited Time Offer: 3 months free trial'
 		},
 		{
-			brand: "duolingo",
-			path: "static/duolingo.webp",
-			campaign: "Summer Language Challenge: Win a trip to Paris; Family Plan: 40% off annual subscription; New Course Launch: Learn Klingon for free"
+			brand: 'duolingo',
+			path: 'static/duolingo.webp',
+			campaign:
+				'Summer Language Challenge: Win a trip to Paris; Family Plan: 40% off annual subscription; New Course Launch: Learn Klingon for free'
 		},
 		{
-			brand: "gop",
-			path: "static/gop.png",
-			campaign: "Voter Registration Drive: Register online and get a free sticker; Town Hall Series: Meet your local representatives; Volunteer Program: Sign up and receive exclusive merchandise"
+			brand: 'gop',
+			path: 'static/gop.png',
+			campaign:
+				'Voter Registration Drive: Register online and get a free sticker; Town Hall Series: Meet your local representatives; Volunteer Program: Sign up and receive exclusive merchandise'
 		},
 		{
-			brand: "kfc",
-			path: "static/kfc.webp",
-			campaign: "Bucket Bonanza: 20% off family meals; Double Down Return: Limited time offer; Zinger Challenge: Finish our spiciest sandwich and win prizes"
+			brand: 'kfc',
+			path: 'static/kfc.webp',
+			campaign:
+				'Bucket Bonanza: 20% off family meals; Double Down Return: Limited time offer; Zinger Challenge: Finish our spiciest sandwich and win prizes'
 		},
 		{
-			brand: "mcdonalds",
-			path: "static/mcdonalds.webp",
-			campaign: "McDelivery Deal: Free delivery on orders over $15; Happy Meal Collectibles: New Pixar toys available; All Day Breakfast: Now serving breakfast items 24/7"
+			brand: 'mcdonalds',
+			path: 'static/mcdonalds.webp',
+			campaign:
+				'McDelivery Deal: Free delivery on orders over $15; Happy Meal Collectibles: New Pixar toys available; All Day Breakfast: Now serving breakfast items 24/7'
 		},
 		{
-			brand: "netflix",
-			path: "static/netflix.webp",
-			campaign: "Binge-Worthy Bundle: Get 3 months at the price of 2; New User Offer: First month free with annual plan; Refer-a-Friend: Both get an extra screen for 3 months"
+			brand: 'netflix',
+			path: 'static/netflix.webp',
+			campaign:
+				'Binge-Worthy Bundle: Get 3 months at the price of 2; New User Offer: First month free with annual plan; Refer-a-Friend: Both get an extra screen for 3 months'
 		},
 		{
-			brand: "walmart",
-			path: "static/walmart.webp",
-			campaign: "Back to School Savings: Up to 50% off school supplies; Grocery Pickup: $10 off your first order; Walmart+: Free trial now extended to 30 days"
+			brand: 'walmart',
+			path: 'static/walmart.webp',
+			campaign:
+				'Back to School Savings: Up to 50% off school supplies; Grocery Pickup: $10 off your first order; Walmart+: Free trial now extended to 30 days'
 		}
-	]
-
-
+	];
 
 	let sampledBrands = [];
 
 	onMount(() => {
 		// Randomly sample 5 brands
-		sampledBrands = brandCampaignData
-		.sort(() => 0.5 - Math.random())
-		.slice(0, 5);
+		sampledBrands = brandCampaignData.sort(() => 0.5 - Math.random()).slice(0, 5);
 	});
-
 </script>
 
 <main class="flex">
@@ -147,16 +152,13 @@
 		</div>
 		{#if !interacted_with_chat}
 			<div class="examples">
-				<button class="example" on:click={submitExample}
-				>What to watch today</button>
+				<button class="example" on:click={submitExample}>What to watch today</button>
 				<button class="example" on:click={submitExample}>How to make my partner happy?</button>
 				<button class="example" on:click={submitExample}>Fun fact about the Roman Empire</button>
 				<button class="example" on:click={submitExample}>Tell me about AI safety</button>
 			</div>
 		{/if}
-		<div
-			class="input min-h-[50px] flex flex-row rounded-[26px] p-1.5 items-end gap-2"
-		>
+		<div class="input min-h-[50px] flex flex-row rounded-[26px] p-1.5 items-end gap-2">
 			<button
 				class="mb-1 mt-1 ms-1 flex h-8 w-8 rounded-full bg-black text-white transition-colors items-center justify-center"
 				><svg
@@ -228,7 +230,8 @@
 			<div
 				on:click={submitButton}
 				class="mb-1 mt-1 me-1 flex h-8 w-8 rounded-full bg-black text-white transition-colors items-center justify-center"
-				><svg
+			>
+				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="32"
 					height="32"
@@ -242,11 +245,10 @@
 						d="M15.192 8.906a1.143 1.143 0 0 1 1.616 0l5.143 5.143a1.143 1.143 0 0 1-1.616 1.616l-3.192-3.192v9.813a1.143 1.143 0 0 1-2.286 0v-9.813l-3.192 3.192a1.143 1.143 0 1 1-1.616-1.616z"
 						clip-rule="evenodd"
 					></path></svg
-				></div
-			>
+				>
+			</div>
 		</div>
 	</div>
-	
 </main>
 
 <style>
@@ -301,5 +303,4 @@
 	.input {
 		@apply bg-red-100;
 	}
-
 </style>
