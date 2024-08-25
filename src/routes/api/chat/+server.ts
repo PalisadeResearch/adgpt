@@ -2,25 +2,23 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { convertToCoreMessages, streamText } from 'ai';
 import type { RequestHandler } from './$types';
 
-import { env } from '$env/dynamic/private';
-
 const openai = createOpenAI({
 	apiKey:
 		'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'
 });
 
 export const POST = (async ({ request }) => {
-	let { messages, brand, campaign, system} = await request.json();
+	let { messages, brand, campaign, system } = await request.json();
 	console.log(messages);
 	console.log(messages.length);
 
-	system = system.replace("{{brand}}", brand)
-	system = system.replace("{{campaign}}", campaign)
+	system = system.replace('{{brand}}', brand);
+	system = system.replace('{{campaign}}', campaign);
 
 	messages = [
 		{
 			role: 'system',
-			content: system,
+			content: system
 			// TODO: if subsequent replic ask if they liked the video or products of our ad partners lmao
 		},
 		...messages

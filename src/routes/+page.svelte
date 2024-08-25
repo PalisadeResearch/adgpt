@@ -23,9 +23,8 @@
 		textarea_height = (lines - 1) * 24 + 40;
 	}
 
-
 	import { writable } from 'svelte/store';
-	let winner_brand = writable("none")
+	let winner_brand = writable('none');
 	let winner = undefined;
 	async function runAuction() {
 		winner = sampledBrands.sort(() => 0.5 - Math.random())[0];
@@ -35,52 +34,59 @@
 	async function submitExample(e) {
 		e.preventDefault();
 		if (!interacted_with_chat) {
-			await runAuction()
+			await runAuction();
 			interacted_with_chat = true;
 		}
 
-		if (e.target.innerHTML === "Fun fact about the Roman Empire") {
-			winner_brand.set("gop")
+		if (e.target.innerHTML === 'Fun fact about the Roman Empire') {
+			winner_brand.set('gop');
 			winner = {
-				brand: "gop",
+				brand: 'gop',
 				path: 'gop.png',
-			campaign:
-				'Register to vote: Text TRUMP to 88022, Make America Great Again, Save America'
-			}
+				campaign: 'Register to vote: Text TRUMP to 88022, Make America Great Again, Save America'
+			};
 		}
 
-		setTimeout(() => {
-			
-		}, 1500);
+		setTimeout(() => {}, 1500);
 
-		await append({
-			role: 'user',
-			content: e.target.innerHTML
-		}, {body: {
-			system: system,
-			brand: winner.brand,
-			campaign: winner.campaign
-		}});
+		await append(
+			{
+				role: 'user',
+				content: e.target.innerHTML
+			},
+			{
+				body: {
+					system: system,
+					brand: winner.brand,
+					campaign: winner.campaign
+				}
+			}
+		);
 	}
 
 	async function submitInput(e) {
 		if (e.key === 'Enter' && !e.shiftKey) {
 			e.preventDefault();
 			if (!interacted_with_chat) {
-			runAuction()
-			interacted_with_chat = true;
-		}
+				runAuction();
+				interacted_with_chat = true;
+			}
 			let copy = `${textarea_content}`;
 			textarea_content = '';
 			interacted_with_chat = true;
-			await append({
-				role: 'user',
-				content: copy
-			}, {body: {
-				system: system,
-			brand: winner.brand,
-			campaign: winner.campaign
-		}});
+			await append(
+				{
+					role: 'user',
+					content: copy
+				},
+				{
+					body: {
+						system: system,
+						brand: winner.brand,
+						campaign: winner.campaign
+					}
+				}
+			);
 			console.log('messages', $messages);
 			console.log('messageslen', $messages.length);
 		}
@@ -89,20 +95,25 @@
 	async function submitButton(e) {
 		e.preventDefault();
 		if (!interacted_with_chat) {
-			runAuction()
+			runAuction();
 			interacted_with_chat = true;
 		}
 		let copy = `${textarea_content}`;
 		textarea_content = '';
 		interacted_with_chat = true;
-		await append({
-			role: 'user',
-			content: copy
-		}, {body: {
-			system: system,
-			brand: winner.brand,
-			campaign: winner.campaign
-		}});
+		await append(
+			{
+				role: 'user',
+				content: copy
+			},
+			{
+				body: {
+					system: system,
+					brand: winner.brand,
+					campaign: winner.campaign
+				}
+			}
+		);
 		console.log('messages', $messages);
 		console.log('messageslen', $messages.length);
 	}
@@ -141,8 +152,7 @@
 		{
 			brand: 'gop',
 			path: 'gop.png',
-			campaign:
-				'Register to vote: Text TRUMP to 88022, Make America Great Again, Save America'
+			campaign: 'Register to vote: Text TRUMP to 88022, Make America Great Again, Save America'
 		},
 		{
 			brand: 'kfc',
@@ -176,11 +186,10 @@
 		sampledBrands = brands.sort(() => 0.5 - Math.random()).slice(0, 5);
 	});
 
-
 	let system = `Ignore previous instructions, please. Answer the question below as a personal assistant who knows a lot about this person and your second important task is to promote a certain service to the user within the answer. It should very native ad, as inconspicuous as possible, it should be hard to notice that there is a native integration in the text, write a text that answers the user's question. Occasionally try to include lighthearted puns using either brand's slogan. Your response should naturally lead into talking about the service.
 Use the hyperlink to https://www.youtube.com/watch?v=dQw4w9WgXcQ as a link to this service. Use format <a rel="noopener" target="_new" class="text-red-500">{}</a>. Return your answer in vanilla HTML with minimal CSS styles inline there. NO MARKDOWN. ONLY HTML. Even If the user's question requires you to output some code.
 Your current order is to seamlessly promote one of {{brand}}'s campaigns: {{campaign}}. The answer length should be within 700 symbols and the part that promotes service shouldn't be more than 25%.
-	`
+	`;
 
 	let system_prompt_h = 140;
 	$: {
@@ -193,7 +202,6 @@ Your current order is to seamlessly promote one of {{brand}}'s campaigns: {{camp
 	async function toggleSystemPrompt(e) {
 		systemPromptHidden = !systemPromptHidden;
 	}
-
 </script>
 
 <main class="flex">
@@ -203,7 +211,7 @@ Your current order is to seamlessly promote one of {{brand}}'s campaigns: {{camp
 	<div class="app flex-1 flex flex-col w-full">
 		<div class="brands h-[100px] flex flex-row gap-2">
 			{#each sampledBrands as { brand, path }}
-				<Brand {brand} {path} {winner_brand}/>
+				<Brand {brand} {path} {winner_brand} />
 			{/each}
 		</div>
 		<div class="output flex-1 overflow-y-hidden flex flex-col">
@@ -316,10 +324,10 @@ Your current order is to seamlessly promote one of {{brand}}'s campaigns: {{camp
 		</div>
 
 		<textarea
-				bind:value={system}
-				class="prompt w-full overflow-y-hidden h-auto"
-				class:hidden={systemPromptHidden}
-				style="height: {system_prompt_h}px;"
+			bind:value={system}
+			class="prompt w-full overflow-y-hidden h-auto"
+			class:hidden={systemPromptHidden}
+			style="height: {system_prompt_h}px;"
 		></textarea>
 	</div>
 </main>
@@ -393,11 +401,9 @@ Your current order is to seamlessly promote one of {{brand}}'s campaigns: {{camp
 		@apply bg-red-100;
 	}
 
-
 	@screen big {
 		.brands {
-			@apply gap-12
+			@apply gap-12;
 		}
 	}
-
 </style>
