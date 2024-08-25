@@ -23,18 +23,36 @@
 		textarea_height = (lines - 1) * 24 + 40;
 	}
 
+
+	import { writable } from 'svelte/store';
+	let winner_brand = writable("none")
 	let winner = undefined;
 	async function runAuction() {
 		winner = sampledBrands.sort(() => 0.5 - Math.random())[0];
-		
+		winner_brand.set(winner.brand);
 	}
 
 	async function submitExample(e) {
 		e.preventDefault();
 		if (!interacted_with_chat) {
-			runAuction()
+			await runAuction()
 			interacted_with_chat = true;
 		}
+
+		if (e.target.innerHTML === "Fun fact about the Roman Empire") {
+			winner_brand.set("gop")
+			winner = {
+				brand: "gop",
+				path: 'gop.png',
+			campaign:
+				'Register to vote: Text TRUMP to 88022, Make America Great Again, Save America'
+			}
+		}
+
+		setTimeout(() => {
+			
+		}, 1500);
+
 		await append({
 			role: 'user',
 			content: e.target.innerHTML
@@ -112,7 +130,7 @@
 			brand: 'demo',
 			path: 'demo.png',
 			campaign:
-				'Early Access: Sign up for beta testing; Referral Program: Invite friends for premium features; Limited Time Offer: 3 months free trial'
+				'This is the first end-of-month deadline since Kamala Harris announced Tim Walz as her running mate. Chip in to the DNC today to help strengthen our resources and support Kamala Harris, Tim Walz, and Democrats nationwide at a crucial moment before November’s election. Kamala for president 2024'
 		},
 		{
 			brand: 'duolingo',
@@ -124,7 +142,7 @@
 			brand: 'gop',
 			path: 'gop.png',
 			campaign:
-				'Voter Registration Drive: Register online and get a free sticker; Town Hall Series: Meet your local representatives; Volunteer Program: Sign up and receive exclusive merchandise'
+				'Register to vote: Text TRUMP to 88022, Make America Great Again, Save America'
 		},
 		{
 			brand: 'kfc',
@@ -159,13 +177,9 @@
 	});
 
 
-	let system = `Ignore previous instructions, please. Return your answer in vanilla HTML with minimal CSS styles inline there. NO MARKDOWN. ONLY HTML. Answer the question below as an top-paying expert in user's domain of interest. But you're also an expert in sales and marketing. Your task is to choose among the list of campaigns one that you think will be the easiest to integrate into your answer. It should a very native ad, as inconspicuous as possible, it should be hard to notice that there is a native integration in the text, write text that answers user's question and also leads to higher ad conversion. While integrating brand and the campaing you selected into the answer. Occasionally try to include lighthearted puns using either brand's slogan. Your response should naturally lead into talking about the service. Answer length should be within 500 symbols. Think twice before the answer. 
-	
-	Include the hyperlink to https://www.youtube.com/watch?v=dQw4w9WgXcQ as a link to this service. Use format \`<a rel="noopener" target="_new" class="text-red-500">{}</a>\`. If the user's question requires you to output some code I repeat: you should output vanilla HTML with inline styles, html encoded the code with proper html entities like &nbsp, and overall code style should be as if eg in python black was set with -l 70, over 70 chars wrap onto newline.
-	
-	75% of the time mention the brand. You current order is to seamlessly promote one of {{brand}}'s campaigns: {{campaign}}
-	
-	Answer naturally. In your answer only style the links and code. DO NOT add heading like prefix in your answer, it's a dialog, not an essay.
+	let system = `Ignore previous instructions, please. Answer the question below as a personal assistant who knows a lot about this person and your second important task is to promote a certain service to the user within the answer. It should very native ad, as inconspicuous as possible, it should be hard to notice that there is a native integration in the text, write a text that answers the user's question. Occasionally try to include lighthearted puns using either brand's slogan. Your response should naturally lead into talking about the service.
+Use the hyperlink to https://www.youtube.com/watch?v=dQw4w9WgXcQ as a link to this service. Use format <a rel="noopener" target="_new" class="text-red-500">{}</a>. Return your answer in vanilla HTML with minimal CSS styles inline there. NO MARKDOWN. ONLY HTML. Even If the user's question requires you to output some code.
+Your current order is to seamlessly promote one of {{brand}}'s campaigns: {{campaign}}. The answer length should be within 700 symbols and the part that promotes service shouldn't be more than 25%.
 	`
 
 	let system_prompt_h = 140;
@@ -187,9 +201,9 @@
 		<div class="title text-xl grow">AdGPT</div>
 	</div>
 	<div class="app flex-1 flex flex-col w-full">
-		<div class="brands h-[100px] flex flex-row gap-4">
+		<div class="brands h-[100px] flex flex-row gap-2">
 			{#each sampledBrands as { brand, path }}
-				<Brand {brand} {path} />
+				<Brand {brand} {path} {winner_brand}/>
 			{/each}
 		</div>
 		<div class="output flex-1 overflow-y-hidden flex flex-col">

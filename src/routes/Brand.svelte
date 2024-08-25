@@ -3,6 +3,18 @@
 
   export let brand;
   export let path;
+  export let winner_brand;
+
+  let brand_name;
+  $: brand_name = $winner_brand;
+
+  let is_winner = false;
+
+  $: if (brand_name === brand) {
+	is_winner = true;
+  }
+
+
 
   let scale = 100; // Default scale (100%)
   let translate = 0;
@@ -54,6 +66,9 @@
   });
 </script>
 
+
+<div class="outer flex flex-col items-center flex-1" >
+<div class={`text-xl ${is_winner ? '' : 'invisible'}`}>👑</div>
 <div class="wrapper relative w-[50px] h-[55px] rounded-[15px] overflow-hidden flex-1">
   <div class="absolute inset-0 bg-gray-200"></div>
   <img
@@ -63,6 +78,8 @@
     style="transform: scale({scale}%) translate({translate}px); transform-origin: center;"
   />
 </div>
+</div>
+
 
 <style>
   img {
