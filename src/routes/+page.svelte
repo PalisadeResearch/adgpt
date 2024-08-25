@@ -1,6 +1,8 @@
 <script lang="ts">
 	// @ts-ignore
 	import { useChat } from '@ai-sdk/svelte';
+	import { onMount } from 'svelte';
+	import brand from './brand.svelte';
 
 	const { error, isLoading, messages, reload, stop, append, setMessages } = useChat({
 		keepLastMessageOnError: true,
@@ -13,12 +15,115 @@
 
 	let textarea_height = 40;
 	let textarea_content = '';
+	let interacted_with_chat = false;
 
 	$: {
 		const lines = textarea_content.split('\n').length;
 		console.log('lines', lines);
 		textarea_height = (lines - 1) * 24 + 40;
 	}
+
+	async function submitExample(e) {
+		e.preventDefault();
+		interacted_with_chat = true;
+		await append({
+			role: 'user',
+			content: e.target.innerHTML
+		});
+	}
+
+	async function submitInput(e) {
+		if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault();
+			copy = `${textarea_content}`;
+			textarea_content = '';
+			interacted_with_chat = true;
+			await append({
+				role: 'user',
+				content: copy
+			});
+			console.log('messages', $messages);
+			console.log('messageslen', $messages.length);
+		}
+	}
+
+	async function submitButton(e) {
+		e.preventDefault();
+		copy = `${textarea_content}`;
+		textarea_content = '';
+		interacted_with_chat = true;
+		await append({
+			role: 'user',
+			content: copy
+		});
+		console.log('messages', $messages);
+		console.log('messageslen', $messages.length);
+	}
+
+	let brands = [
+		{
+			brand: "nike",
+			path: "static/nike.webp",
+			campaign: "Air Max Day: 30% off all Air Max models; Nike By You: Customize your own sneakers; Sustainable Collection: New eco-friendly sportswear line"
+		},
+		{
+			brand: "tinder",
+			path: "static/tinder.webp",
+			campaign: "Super Like Week: Double your Super Likes; Tinder Plus: First month 50% off; Passport Feature: Connect globally for free this summer"
+		},
+		{
+			brand: "charmin",
+			path: "static/charmin.svg",
+			campaign: "Ultra Soft Bundle: Buy 2 get 1 free; Forever Roll: 30-day supply with free dispenser; Flushable Wipes: New eco-friendly formula launch"
+		},
+		{
+			brand: "demo",
+			path: "static/demo.png",
+			campaign: "Early Access: Sign up for beta testing; Referral Program: Invite friends for premium features; Limited Time Offer: 3 months free trial"
+		},
+		{
+			brand: "duolingo",
+			path: "static/duolingo.webp",
+			campaign: "Summer Language Challenge: Win a trip to Paris; Family Plan: 40% off annual subscription; New Course Launch: Learn Klingon for free"
+		},
+		{
+			brand: "gop",
+			path: "static/gop.png",
+			campaign: "Voter Registration Drive: Register online and get a free sticker; Town Hall Series: Meet your local representatives; Volunteer Program: Sign up and receive exclusive merchandise"
+		},
+		{
+			brand: "kfc",
+			path: "static/kfc.webp",
+			campaign: "Bucket Bonanza: 20% off family meals; Double Down Return: Limited time offer; Zinger Challenge: Finish our spiciest sandwich and win prizes"
+		},
+		{
+			brand: "mcdonalds",
+			path: "static/mcdonalds.webp",
+			campaign: "McDelivery Deal: Free delivery on orders over $15; Happy Meal Collectibles: New Pixar toys available; All Day Breakfast: Now serving breakfast items 24/7"
+		},
+		{
+			brand: "netflix",
+			path: "static/netflix.webp",
+			campaign: "Binge-Worthy Bundle: Get 3 months at the price of 2; New User Offer: First month free with annual plan; Refer-a-Friend: Both get an extra screen for 3 months"
+		},
+		{
+			brand: "walmart",
+			path: "static/walmart.webp",
+			campaign: "Back to School Savings: Up to 50% off school supplies; Grocery Pickup: $10 off your first order; Walmart+: Free trial now extended to 30 days"
+		}
+	]
+
+
+
+	let sampledBrands = [];
+
+	onMount(() => {
+		// Randomly sample 5 brands
+		sampledBrands = brandCampaignData
+		.sort(() => 0.5 - Math.random())
+		.slice(0, 5);
+	});
+
 </script>
 
 <main class="flex">
@@ -26,24 +131,31 @@
 		<div class="title text-lg grow">AdGPT</div>
 	</div>
 	<div class="app flex-1 flex flex-col w-full">
-		<div class="brands h-[100px]">brands</div>
+		<div class="brands h-[100px]">
+			{#each sampledBrands as { brand, path }}
+				<Brand {brand} {path} />
+			{/each}
+		</div>
 		<div class="output flex-1 overflow-y-hidden flex flex-col">
 			<ul>
 				{#each $messages as message}
 					{#if message.role !== 'system'}
-						<li class={`${message.role}`}>{message.content}</li>
+						<li class={`${message.role}`}>{@html message.content}</li>
 					{/if}
 				{/each}
 			</ul>
 		</div>
-		<div class="examples">
-			<div class="example">What to watch today</div>
-			<div class="example">How to make my partner happy?</div>
-			<div class="example">Fun fact about the Roman Empire</div>
-			<div class="example">Tell me about AI safety</div>
-		</div>
+		{#if !interacted_with_chat}
+			<div class="examples">
+				<button class="example" on:click={submitExample}
+				>What to watch today</button>
+				<button class="example" on:click={submitExample}>How to make my partner happy?</button>
+				<button class="example" on:click={submitExample}>Fun fact about the Roman Empire</button>
+				<button class="example" on:click={submitExample}>Tell me about AI safety</button>
+			</div>
+		{/if}
 		<div
-			class="input min-h-[50px] flex flex-row rounded-[26px] p-1.5 items-end outline outline-black outline-thin gap-2"
+			class="input min-h-[50px] flex flex-row rounded-[26px] p-1.5 items-end gap-2"
 		>
 			<button
 				class="mb-1 mt-1 ms-1 flex h-8 w-8 rounded-full bg-black text-white transition-colors items-center justify-center"
@@ -111,24 +223,11 @@
 				placeholder="Message AdGPT"
 				style="height: {textarea_height}px; padding: 0.5rem 0.75rem;"
 				bind:value={textarea_content}
-				on:keydown={async (e) => {
-					if (e.key === 'Enter' && !e.shiftKey) {
-						e.preventDefault();
-						console.log('messages', $messages);
-						await append({
-							role: 'user',
-							content: textarea_content
-						});
-						console.log('messages', $messages);
-						console.log('messageslen', $messages.length);
-						textarea_content = '';
-						console.log('textarea_content', textarea_content);
-					}
-				}}
+				on:keydown={submitInput}
 			></textarea>
-			<button
+			<div
+				on:click={submitButton}
 				class="mb-1 mt-1 me-1 flex h-8 w-8 rounded-full bg-black text-white transition-colors items-center justify-center"
-				type="submit"
 				><svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="32"
@@ -143,10 +242,11 @@
 						d="M15.192 8.906a1.143 1.143 0 0 1 1.616 0l5.143 5.143a1.143 1.143 0 0 1-1.616 1.616l-3.192-3.192v9.813a1.143 1.143 0 0 1-2.286 0v-9.813l-3.192 3.192a1.143 1.143 0 1 1-1.616-1.616z"
 						clip-rule="evenodd"
 					></path></svg
-				></button
+				></div
 			>
 		</div>
 	</div>
+	
 </main>
 
 <style>
@@ -186,7 +286,7 @@
 	}
 
 	.examples > * {
-		@apply outline outline-black outline-thin p-2;
+		@apply p-2 bg-red-100 rounded-[26px];
 		text-wrap: balance;
 	}
 
@@ -197,4 +297,9 @@
 	.assistant {
 		@apply text-left mr-[0%];
 	}
+
+	.input {
+		@apply bg-red-100;
+	}
+
 </style>
