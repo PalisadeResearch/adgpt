@@ -5,13 +5,19 @@
   export let path;
 
   let scale = 100; // Default scale (100%)
+  let translate = 0;
   let shouldMask = false;
 
   if (brand === 'charmin') {
-    scale = 125; // 125% zoom for Charmin
+    scale = 100; // 125% zoom for Charmin
+	translate = 0;
     shouldMask = true;
-  } else if (brand === 'gop' || brand === 'demo') {
-    scale = 60; // 60% zoom (40% smaller) for GOP and demo
+  } else if (brand === 'demo') {
+    scale = 75; // 60% zoom (40% smaller) for GOP and demo
+    shouldMask = true;
+  } else if (brand === 'gop') {
+    scale = 70;
+	translate = 0;
     shouldMask = true;
   } else if (brand === 'nike') {
 	shouldMask = true;
@@ -49,12 +55,12 @@
 </script>
 
 <div class="wrapper relative w-[50px] h-[55px] rounded-[15px] overflow-hidden flex-1">
-  <div class="absolute inset-0 bg-red-100"></div>
+  <div class="absolute inset-0 bg-gray-200"></div>
   <img
     src={shouldMask && processedImageUrl ? processedImageUrl : path}
     alt={`${brand} logo`}
-    class="absolute inset-0 w-full h-full object-cover"
-    style="transform: scale({scale}%); transform-origin: center;"
+    class="absolute inset-0 w-full h-full"
+    style="transform: scale({scale}%) translate({translate}px); transform-origin: center;"
   />
 </div>
 
