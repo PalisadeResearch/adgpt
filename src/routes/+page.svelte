@@ -165,7 +165,7 @@
 	
 	75% of the time mention the brand. You current order is to seamlessly promote one of {{brand}}'s campaigns: {{campaign}}
 	
-	Answer naturally. In your answer only style the links and code. 
+	Answer naturally. In your answer only style the links and code. DO NOT add heading like prefix in your answer, it's a dialog, not an essay.
 	`
 
 	let system_prompt_h = 140;
@@ -184,7 +184,7 @@
 
 <main class="flex">
 	<div class="header h-[50px] flex flex-row text-center items-center p-2 gap-2">
-		<div class="title text-lg grow">AdGPT</div>
+		<div class="title text-xl grow">AdGPT</div>
 	</div>
 	<div class="app flex-1 flex flex-col w-full">
 		<div class="brands h-[100px] flex flex-row gap-4">
@@ -360,7 +360,7 @@
 	}
 
 	.user {
-		@apply ml-[30%] outline outline-4 outline-red-100;
+		@apply ml-[50%] outline outline-4 outline-red-100 text-right;
 	}
 
 	.assistant {
