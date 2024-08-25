@@ -2,7 +2,7 @@
 	// @ts-ignore
 	import { useChat } from '@ai-sdk/svelte';
 	import { onMount } from 'svelte';
-	import brand from './brand.svelte';
+	import Brand from './Brand.svelte';
 
 	const { error, isLoading, messages, reload, stop, append, setMessages } = useChat({
 		keepLastMessageOnError: true,
@@ -126,8 +126,7 @@
 	let sampledBrands = [];
 
 	onMount(() => {
-		// Randomly sample 5 brands
-		sampledBrands = brandCampaignData.sort(() => 0.5 - Math.random()).slice(0, 5);
+		sampledBrands = brands.sort(() => 0.5 - Math.random()).slice(0, 5);
 	});
 </script>
 
@@ -136,7 +135,7 @@
 		<div class="title text-lg grow">AdGPT</div>
 	</div>
 	<div class="app flex-1 flex flex-col w-full">
-		<div class="brands h-[100px]">
+		<div class="brands h-[100px] flex flex-row gap-4">
 			{#each sampledBrands as { brand, path }}
 				<Brand {brand} {path} />
 			{/each}
@@ -277,6 +276,12 @@
 		}
 	}
 
+	@screen superbig {
+		.app {
+			@apply w-[50%];
+		}
+	}
+
 	.examples {
 		@apply grid grid-cols-2 grid-rows-2 gap-2 text-sm p-2;
 	}
@@ -288,7 +293,7 @@
 	}
 
 	.examples > * {
-		@apply p-2 bg-red-100 rounded-[26px];
+		@apply p-2 bg-red-100 rounded-[15px];
 		text-wrap: balance;
 	}
 
@@ -303,4 +308,14 @@
 	.input {
 		@apply bg-red-100;
 	}
+
+
+	@screen big {
+		.brands {
+			@apply gap-12
+		}
+	}
+
+
+
 </style>
